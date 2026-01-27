@@ -12,6 +12,8 @@ const __dirname = path.resolve();
 
 const port = process.env.PORT || 5001;
 
+app.use(express.json()); // for parsing application/json and this will be in req.body
+
 app.use("/api/auth", authRoutes);
 app.use("/api/message", messageRoutes);
 
