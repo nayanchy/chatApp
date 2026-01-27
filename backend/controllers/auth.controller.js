@@ -31,21 +31,18 @@ export const signup = async (req, res) => {
 
     const newUser = new User({ fullName, email, password: hashedPassword });
 
-    if (newUser) {
-      generateToken(newUser._id, res);
-      await newUser.save();
+    const newUser = new User({ fullName, email, password: hashedPassword });
+    await newUser.save();
+    generateToken(newUser._id, res);
 
-      return res.status(201).json({
-        _id: newUser._id,
-        fullName: newUser.fullName,
-        email: newUser.email,
-        profilePic: newUser.profilePic,
-      });
+    return res.status(201).json({
+      _id: newUser._id,
+      fullName: newUser.fullName,
+      email: newUser.email,
+      profilePic: newUser.profilePic,
+    });
 
-      //TODO: Send welcome email
-    } else {
-      res.status(400).json({ message: "User creation failed" });
-    }
+    //TODO: Send welcome email
   } catch (error) {
     console.log("Error in Signup:", error);
     res.status(500).json({ message: "Internal Server error" });
