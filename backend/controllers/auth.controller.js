@@ -23,7 +23,8 @@ export const signup = async (req, res) => {
       return res.status(400).json({ message: "Invalid email format" });
     }
 
-    const user = await User.findOne({ email });
+    const normalizedEmail = email.trim().toLowerCase();
+    const user = await User.findOne({ email: normalizedEmail });
     if (user) {
       return res.status(400).json({ message: "Email already in use" });
     }
@@ -31,7 +32,11 @@ export const signup = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newUser = new User({ fullName, email, password: hashedPassword });
+    const newUser = new User({
+      fullName,
+      email: normalizedEmail,
+      password: hashedPassword,
+    });
 
     const savedUser = await newUser.save();
     generateToken(savedUser._id, res);
